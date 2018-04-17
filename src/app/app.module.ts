@@ -50,6 +50,7 @@ import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.componen
       { path: 'login', component: LoginComponent},
       { path: 'admin/products', component: AdminProductsComponent},
       { path: 'admin/orders', component: AdminOrdersComponent},
+      { path: 'my/orders', component: MyOrdersComponent},
     ])
   ],
   providers: [],
