@@ -1,5 +1,7 @@
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/map';
+
 
 @Injectable()
 export class ProductService {
@@ -11,7 +13,18 @@ export class ProductService {
   }
 
   getAll() {
-    return this.db.list('/products');
+     return this.db.list('/products'); // ,
+    //   ref => ref.orderByChild('title'))
+    //   .snapshotChanges();
+    //   .map(actions => {
+    //   return actions.map(action => ({
+    //     key: action.key,
+    //     title: action.payload.val().title,
+    //     imageUrl: action.payload.val().imageUrl,
+    //     price: action.payload.val().price,
+    //     category: action.payload.val().category
+    //   }));
+    // });
   }
 
   getProduct(productId) {
@@ -20,5 +33,9 @@ export class ProductService {
 
   updateProduct(productId, product) {
     return this.db.object('/products/' + productId).update(product);
+  }
+
+  deleteProduct(productId) {
+    return this.db.object('/products/' + productId).remove();
   }
 }
