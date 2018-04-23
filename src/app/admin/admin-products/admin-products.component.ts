@@ -28,7 +28,7 @@ export class AdminProductsComponent implements OnDestroy {
    }
 
    private initTable(proudcts: Product[]) {
-     this.tableResource = new DataTableResource(this.products);
+     this.tableResource = new DataTableResource(proudcts);
      // used to get all the records on the current page based on the current params.. set to 0 for page 1
      this.tableResource.query({ offset: 0 }) // returns a promise
        .then(items => this.items = items);
@@ -40,7 +40,7 @@ export class AdminProductsComponent implements OnDestroy {
 
    reloadItems(params) {
      // have to check if tableRecource is falsy hit return
-      if (!this.tableResource) { return; }
+      if (!this.tableResource) {  return; }
 
      this.tableResource.query(params)
        .then(items => this.items = items);
@@ -49,8 +49,7 @@ export class AdminProductsComponent implements OnDestroy {
   // implementing filtering on the client side after data loaded.
   filter(query: string) {
     // filtered products ternary that returns a filtered product array
-    // tslint:disable-next-line:prefer-const
-    let filteredProducts = (query) ?
+    const filteredProducts = (query) ?
       this.products.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
       this.products;
       // after products are filtered, it needs to be returned back to dataTableResource Object
