@@ -12,17 +12,16 @@ import { DataTableResource } from 'angular5-data-table';
 export class AdminProductsComponent implements OnDestroy {
 
   products: Product[];
-  filteredProducts: any[];
   subscription: Subscription;
   tableResource: DataTableResource<Product>;
   items: Product[] = [];
   itemCount = 0;
 
   constructor(private productService: ProductService) {
-     this.productService.getAll()
+      this.subscription = this.productService.getAll()
       // leaves the observable open for the component... closed via onDestroy()
      .subscribe(products => {
-       this.filteredProducts = this.products = products;
+       this.products = products;
        this.initTable(products);
      });
    }
@@ -48,9 +47,12 @@ export class AdminProductsComponent implements OnDestroy {
 
   // implementing filtering on the client side after data loaded.
   filter(query: string) {
-    this.filteredProducts = (query) ?
+    // filtered products ternary that returns a filtered product array
+    const filteredProducts = (query) ?
       this.products.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
       this.products;
+      // after products are filtered, it needs to be returned back to dataTableResource Object
+      this.initTable(filteredProducts);
   }
 
   ngOnDestroy() {
