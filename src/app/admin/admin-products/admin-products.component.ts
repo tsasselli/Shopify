@@ -3,6 +3,7 @@ import { ProductService } from './../../product.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { DataTableResource } from 'angular5-data-table';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'app-admin-products',
@@ -48,7 +49,8 @@ export class AdminProductsComponent implements OnDestroy {
   // implementing filtering on the client side after data loaded.
   filter(query: string) {
     // filtered products ternary that returns a filtered product array
-    const filteredProducts = (query) ?
+    // tslint:disable-next-line:prefer-const
+    let filteredProducts = (query) ?
       this.products.filter(p => p.title.toLowerCase().includes(query.toLowerCase())) :
       this.products;
       // after products are filtered, it needs to be returned back to dataTableResource Object
