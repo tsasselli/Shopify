@@ -1,7 +1,8 @@
 import { Product } from './models/product';
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import 'rxjs/add/operator/take';
+import { ShoppingCart } from './models/shopping-cart';
 
 @Injectable()
 export class ShoppingCartService {
@@ -14,7 +15,7 @@ export class ShoppingCartService {
     });
   }
 
-   async getCart() {
+   async getCart(): Promise<FirebaseObjectObservable<ShoppingCart>> {
      const cartId = await this.getOrCreateCartId();
     return this.db.object('/shopping-carts/' + cartId);
   }
@@ -34,11 +35,19 @@ export class ShoppingCartService {
   }
 
     async addToCart(product: Product) {
+     this.updateItemQuantity(product, 1);
+    }
+
+   async removeFromCart(product: Product) {
+     this.updateItemQuantity(product, -1);
+    }
+
+    private async updateItemQuantity(product: Product, change: number) {
       const cartId = await this.getOrCreateCartId();
       const item$ = this.getItem(cartId, product.$key);
       // take one kills the observable so you dont have to unsubscribe.
       item$.take(1).subscribe(item => {
-         item$.update({ product: product, quantity: (item.quantity || 0) + 1 });
+        item$.update({ product: product, quantity: (item.quantity || 0) + change });
       });
     }
 }
