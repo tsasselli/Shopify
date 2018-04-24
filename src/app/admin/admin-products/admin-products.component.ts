@@ -40,7 +40,7 @@ export class AdminProductsComponent implements OnDestroy {
 
    reloadItems(params) {
      // have to check if tableRecource is falsy hit return
-      if (!this.tableResource) {  return; }
+      if (!this.tableResource) { return; }
 
      this.tableResource.query(params)
        .then(items => this.items = items);

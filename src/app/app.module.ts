@@ -1,3 +1,4 @@
+import { ShoppingCartService } from './shopping-cart.service';
 import { CategoryService } from './category.service';
 import { UserService } from './user.service';
 import { AuthGuardService } from './auth-guard.service';
@@ -88,7 +89,8 @@ import { ProductCardComponent } from './product-card/product-card.component';
               AdminAuthGuardService,
               UserService,
               CategoryService,
-              ProductService],
+              ProductService,
+              ShoppingCartService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
