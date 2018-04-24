@@ -14,11 +14,12 @@ export class ShoppingCartService {
     });
   }
 
-  private getCart(cartId: string) {
+   async getCart() {
+     const cartId = await this.getOrCreateCartId();
     return this.db.object('/shopping-carts/' + cartId);
   }
 
-  private async getOrCreateCartId() {
+  private async getOrCreateCartId(): Promise<string> {
     const cartId = localStorage.getItem('cartId');
       // if local storage has cartID, return it.. else create one and store it.
     if (cartId) { return cartId; }
