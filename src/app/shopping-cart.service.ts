@@ -11,16 +11,29 @@ export class ShoppingCartService {
 
   constructor(private db: AngularFireDatabase) { }
 
+  async getCart(): Promise<Observable<ShoppingCart>> {
+    const cartId = await this.getOrCreateCartId();
+    return this.db.object('/shopping-carts/' + cartId)
+      .map(c => new ShoppingCart(c.items));
+  }
+
+  async addToCart(product: Product) {
+    this.updateItem(product, 1);
+  }
+
+  async removeFromCart(product: Product) {
+    this.updateItem(product, -1);
+  }
+
+  async clearCart() {
+    let cartId = await this.getOrCreateCartId();
+    this.db.object('/shopping-carts/' + cartId + '/items').remove();
+  }
+
   private create() {
     return this.db.list('/shopping-carts').push({
       dateCreated: new Date().getTime()
     });
-  }
-
-   async getCart(): Promise<Observable<ShoppingCart>> {
-     const cartId = await this.getOrCreateCartId();
-    return this.db.object('/shopping-carts/' + cartId)
-      .map(c => new ShoppingCart(c.items));
   }
 
   private async getOrCreateCartId(): Promise<string> {
@@ -37,20 +50,20 @@ export class ShoppingCartService {
     return this.db.object('/shopping-carts/' + cartId + '/items/' + productId);
   }
 
-    async addToCart(product: Product) {
-     this.updateItemQuantity(product, 1);
-    }
-
-   async removeFromCart(product: Product) {
-     this.updateItemQuantity(product, -1);
-    }
-
-    private async updateItemQuantity(product: Product, change: number) {
+  // gets the cartID and items based off of cartId 
+    private async updateItem(product: Product, change: number) {
       const cartId = await this.getOrCreateCartId();
       const item$ = this.getItem(cartId, product.$key);
       // take one kills the observable so you dont have to unsubscribe.
       item$.take(1).subscribe(item => {
-        item$.update({ product: product, quantity: (item.quantity || 0) + change });
+        let quantity = (item.quantity || 0) + change;
+        if (quantity === 0) item$.remove();
+        else item$.update({
+           title: product.title,
+           imageUrl: product.imageUrl,
+           price: product.price, 
+           quantity: quantity
+          });
       });
     }
 }
