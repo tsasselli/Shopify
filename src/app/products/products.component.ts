@@ -18,27 +18,34 @@ export class ProductsComponent implements OnInit {
   filteredProducts: Product[] = [];
   category: string;
   cart$: Observable<ShoppingCart>;
-  subscrition: Subscription;
 
-  constructor(productService: ProductService,
-    route: ActivatedRoute,
-    private shoppingCartService: ShoppingCartService) {
-    productService
-      .getAll()
-      .switchMap(products => {
-        this.products = products;
-        return route.queryParamMap;
-      })
-      .subscribe(params => {
-        this.category = params.get('category');
-        this.filteredProducts = (this.category) ?  // if have category call filter method on product array
-          // gets products object and returns it if its equal to that category.
-          this.products.filter(p => p.category === this.category) :
-          this.products;
-      });
-  }
+  constructor(private productService: ProductService,
+              private route: ActivatedRoute,
+              private shoppingCartService: ShoppingCartService) { }
 
   async ngOnInit() {
     this.cart$ = await this.shoppingCartService.getCart();
+    this.populateProducts();
+  }
+
+  private populateProducts() {
+    this.productService
+      .getAll()
+      .switchMap(products => {
+        this.products = products;
+        return this.route.queryParamMap;
+      })
+      .subscribe(params => {
+        this.category = params.get('category');
+        this.applyFilter();
+      });
+  }
+
+  private applyFilter() {
+    // if have category call filter method on product array
+    this.filteredProducts = (this.category) ? 
+      // gets products object and returns it if its equal to that category.
+      this.products.filter(p => p.category === this.category) :
+      this.products;
   }
 }
