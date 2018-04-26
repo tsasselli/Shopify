@@ -12,10 +12,7 @@ import { DataTableModule } from 'angular5-data-table';
 
 @NgModule({
   imports: [
-    CommonModule,
-    FormsModule,
     SharedModule,
-    DataTableModule,
     RouterModule.forChild([
       {
         path: 'admin/products/new', component: ProductFormComponent,
