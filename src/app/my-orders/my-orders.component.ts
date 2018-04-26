@@ -1,5 +1,5 @@
-import { OrderService } from './../order.service';
-import { AuthService } from './../auth.service';
+import { OrderService } from 'shared/service/order.service';
+import { AuthService } from 'shared/service/auth.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({

@@ -2,8 +2,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
-import { Product } from './models/product';
-
+import { Product } from 'shared/models/product';
 
 @Injectable()
 export class ProductService {
@@ -15,18 +14,7 @@ export class ProductService {
   }
 
   getAll(): Observable<Product[]> {
-     return this.db.list('/products'); // ,
-    //   ref => ref.orderByChild('title'))
-    //   .snapshotChanges();
-    //   .map(actions => {
-    //   return actions.map(action => ({
-    //     key: action.key,
-    //     title: action.payload.val().title,
-    //     imageUrl: action.payload.val().imageUrl,
-    //     price: action.payload.val().price,
-    //     category: action.payload.val().category
-    //   }));
-    // });
+     return this.db.list('/products'); 
   }
 
   getProduct(productId) {
